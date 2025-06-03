@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - Frontend Guide</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: #f7fafc;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .base-url {
+            background: rgba(255,255,255,0.15);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+        }
+        
+        .quick-nav {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .quick-nav h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .nav-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .nav-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .nav-item a {
+            text-decoration: none;
+            color: #2d3748;
+            font-weight: 500;
+        }
+        
+        .endpoint-card {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #28a745;
+        }
+        
+        .endpoint-card.post { border-left-color: #ffc107; }
+        .endpoint-card.put { border-left-color: #17a2b8; }
+        .endpoint-card.delete { border-left-color: #dc3545; }
+        
+        .endpoint-header {
+            background: #f8f9fa;
+            padding: 25px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .endpoint-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .method-badge {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .method-badge.get { background: #28a745; }
+        .method-badge.post { background: #ffc107; color: #212529; }
+        .method-badge.put { background: #17a2b8; }
+        .method-badge.delete { background: #dc3545; }
+        
+        .endpoint-url {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .endpoint-description {
+            color: #6c757d;
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+        
+        .endpoint-body {
+            padding: 25px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            color: #495057;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .code-container {
+            background: #1a202c;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .code-header {
+            background: #2d3748;
+            padding: 12px 20px;
+            color: #a0aec0;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-bottom: 1px solid #4a5568;
+        }
+        
+        .code-block {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+        
+        .json-key {
+            color: #81e6d9;
+        }
+        
+        .json-string {
+            color: #90cdf4;
+        }
+        
+        .json-number {
+            color: #f6ad55;
+        }
+        
+        .json-boolean {
+            color: #f687b3;
+        }
+        
+        .required-badge {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .optional-badge {
+            background: #bee3f8;
+            color: #2b6cb0;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .response-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 8px 8px 0 0;
+            border: 1px solid #e9ecef;
+            border-bottom: none;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-right: 1px solid #e9ecef;
+            font-weight: 500;
+            color: #6c757d;
+            transition: all 0.3s;
+        }
+        
+        .tab:last-child {
+            border-right: none;
+        }
+        
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .params-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .params-table th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .params-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: top;
+        }
+        
+        .params-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #4a5568;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .code-container:hover .copy-btn {
+            opacity: 1;
+        }
+        
+        .copy-btn:hover {
+            background: #2d3748;
+        }
+        
+        .footer {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .footer h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .footer p {
+            color: #6c757d;
+            margin: 5px 0;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .status-200 { background: #c6f6d5; color: #2f855a; }
+        .status-400 { background: #fed7d7; color: #c53030; }
+        .status-404 { background: #fbb6ce; color: #b83280; }
+        .status-500 { background: #fed7d7; color: #c53030; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Password Manager API</h1>
+            <p>Documentação para Desenvolvedores Frontend</p>
+            <div class="base-url">
+                Base URL: http://localhost:8000
+            </div>
+        </div>
+
+        <div class="quick-nav">
+            <h2>🚀 Navegação Rápida</h2>
+            <div class="nav-grid">
+                <div class="nav-item">
+                    <a href="#welcome">GET / - Boas-vindas</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#get-all">GET /api/get-all - Listar Senhas</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#get-by-name">GET /api/get-id/{nome} - Buscar por Nome</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#generate">GET /api/gerar-senha - Gerar Senha</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#create">POST /api/create - Criar Senha</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#update">PUT /api/update/{id} - Atualizar Senha</a>
+                </div>
+                <div class="nav-item">
+                    <a href="#delete">DELETE /api/delete/{id} - Deletar Senha</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Welcome Endpoint -->
+        <div id="welcome" class="endpoint-card">
+            <div class="endpoint-header">
+                <div class="endpoint-title">
+                    <span class="method-badge get">GET</span>
+                    <span class="endpoint-url">/</span>
+                </div>
+                <div class="endpoint-description">Endpoint de boas-vindas da API</div>
+            </div>
+            <div class="endpoint-body">
+                <div class="section">
+                    <div class="section-title">📤 Response</div>
+                    <div class="response-tabs">
+                        <div class="tab active" onclick="showTab(event, 'welcome-200')">
+                            <span class="status-badge status-200">200</span> Sucesso
+                        </div>
+                    </div>
+                    <div class="tab-content active" id="welcome-200">
+                        <div class="code-container">
+                            <div class="code-header">Response Body (application/json)</div>
+                            <div class="code-block">
+{
+  <span class="json-key">"message"</span>: <span class="json-string">"Bem vindo a API"</span>
+}
+                            </div>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Get All Passwords -->
+        <div id="get-all" class="endpoint-card">
+            <div class="endpoint-header">
+                <div class="endpoint-title">
+                    <span class="method-badge get">GET</span>
+                    <span class="endpoint-url">/api/get-all</span>
+                </div>
+                <div class="endpoint-description">Retorna todas as senhas cadastradas no sistema</div>
+            </div>
+            <div class="endpoint-body">
+                <div class="section">
+                    <div class="section-title">📤 Response</div>
+                    <div class="response-tabs">
+                        <div class="tab active" onclick="showTab(event, 'getall-200')">
+                            <span class="status-badge status-200">200</span> Sucesso
+                        </div>
+                    </div>
+                    <div class="tab-content active" id="getall-200">
+                        <div class="code-container">
+                            <div class="code-header">Response Body (application/json)</div>
+                            <div class="code-block">
+[
+  {
+    <span class="json-key">"id"</span>: <span class="json-string">"doc_id_123"</span>,
+    <span class="json-key">"nome"</span>: <span class="json-string">"Gmail"</span>,
+    <span class="json-key">"senha"</span>: <span class="json-string">"minha_senha_123"</span>,
+    <span class="json-key">"descricao"</span>: <span class="json-string">"Conta pessoal do Gmail"</span>
+  },
+  {
+    <span class="json-key">"id"</span>: <span class="json-string">"doc_id_456"</span>,
+    <span class="json-key">"nome"</span>: <span class="json-string">"Facebook"</span>,
+    <span class="json-key">"senha"</span>: <span class="json-string">"senha_facebook"</span>,
+    <span class="json-key">"descricao"</span>: <span class="json-string">null</span>
+  }
+]
+                            </div>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Get by Name -->
+        <div id="get-by-name" class="endpoint-card">
+            <div class="endpoint-header">
+                <div class="endpoint-title">
+                    <span class="method-badge get">GET</span>
+                    <span class="endpoint-url">/api/get-id/{nome}</span>
+                </div>
+                <div class="endpoint-description">Busca uma senha específica pelo nome</div>
+            </div>
+            <div class="endpoint-body">
+                <div class="section">
+                    <div class="section-title">🔧 Parâmetros da URL</div>
+                    <table class="params-table">
+                        <thead>
+                            <tr>
+                                <th>Parâmetro</th>
+                                <th>Tipo</th>
+                                <th>Obrigatório</th>
+                                <th>Descrição</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>nome</code></td>
+                                <td>string</td>
+                                <td><span class="required-badge">Obrigatório</span></td>
+                                <td>Nome do usuário para busca</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">📤 Response</div>
+                    <div class="response-tabs">
+                        <div class="tab active" onclick="showTab(event, 'getname-200')">
+                            <span class="status-badge status-200">200</span> Encontrado
+                        </div>
+                        <div class="tab" onclick="showTab(event, 'getname-404')">
+                            <span class="status-badge status-404">200</span> Não Encontrado
+                        </div>
+                    </div>
+                    <div class="tab-content active" id="getname-200">
+                        <div class="code-container">
+                            <div class="code-header">Response Body - Usuário Encontrado</div>
+                            <div class="code-block">
+{
+  <span class="json-key">"id"</span>: <span class="json-string">"doc_id_123"</span>,
+  <span class="json-key">"success"</span>: <span class="json-boolean">true</span>,
+  <span class="json-key">"messagem"</span>: <span class="json-string">"Usuário encontrado"</span>
+}
+                            </div>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+                        </div>
+                    </div>
+                    <div class="tab-content" id="getname-404">
+                        <div class="code-container">
+                            <div class="code-header">Response Body - Usuário Não Encontrado</div>
+                            <div class="code-block">
+{
+  <span class="json-key">"success"</span>: <span class="json-boolean">false</span>,
+  <span class="json-key">"messagem"</span>: <span class="json-string">"Usuário não encontrado"</span>
+}
+                            </div>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Generate Password -->
+        <div id="generate" class="endpoint-card">
+            <div class="endpoint-header">
+                <div class="endpoint-title">
+                    <span class="method-badge get">GET</span>
+                    <span class="endpoint-url">/api/gerar-senha</span>
+                </div>
+                <div class="endpoint-description">Gera uma senha aleatória e segura com 20 caracteres</div>
+            </div>
+            <div class="endpoint-body">
+                <div class="section">
+                    <div class="section-title">📤 Response</div>
+                    <div class="response-tabs">
+                        <div class="tab active" onclick="showTab(event, 'generate-200')">
+                            <span class="status-badge status-200">200</span> Sucesso
+                        </div>
+                    </div>
+                    <div class="tab-content active" id="generate-200">
+                        <div class="code-container">
+                            <div class="code-header">Response Body (application/json)</div>
+                            <div class="code-block">
+{
+  <span class="json-key">"success"</span>: <span class="json-boolean">true</span>,
+  <span class="json-key">"senha"</span>: <span class="json-string">"A7bC9d2E$f8G#h4I&j6K"</span>,
+  <span class="json-key">"mensagem"</span>: <span class="json-string">"Senha gerada com sucesso"</span>
+}
+                            </div>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Password -->
+        <div id="create" class="endpoint-card post">
+            <div class="endpoint-header">
+                <div class="endpoint-title">
+                    <span class="method-badge post">POST</span>
+                    <span class="endpoint-url">/api/create</span>
+                </div>
+                <div class="endpoint-description">Cria um novo registro de senha no sistema</div>
+            </div>
+            <div class="endpoint-body">
+                <div class="section">
+                    <div class="section-title">📥 Request Body</div>
+                    <table class="params-table">
+                        <thead>
+                            <tr>
+                                <th>Campo</th>
+                                <th>Tipo</th>
+                                <th>Obrigatório</th>
+                                <th>Descrição</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>nome</code></td>
+                                <td>string</td>
+                                <td><span class="required-badge">Obrigatório</span></td>
+                                <td>Nome identificador da senha</td>
+                            </tr>
+                            <tr>
+                                <td><code>senha</code></td>
+                                <td>string</td>
+                                <td><span class="required-badge">Obrigatório</span></td>
+                                <td>A senha a ser armazenada</td>
+                            </tr>
+                            <tr>
+                                <td><code>descricao</code></td>
+                                <td>string</td>
+                                <td><span class="optional-badge">Opcional</span></td>
+                                <td>Descrição opcional da senha</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="code-container">
+                        <div class="code-header">Request Body Example (application/json)</div>
+                        <div class="code-block">
+{
+  <span class="json-key">"nome"</span>: <span class="json-string">"Instagram"</span>,
+  <span class="json-key">"senha"</span>: <span class="json-string">"minha_senha_instagram"</span>,
+  <span class="json-key">"descricao"</span>: <span class="json-string">"Conta pessoal do Instagram"</span>
+}
+                        </div>
+                        <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">📤 Response</div>
+                    <div class="response-tabs">
+                        <div class="tab active" onclick="showTab(event, 'create-200')">
+                            <span class="status-badge status-200">200</span> Sucesso
+                        </div>
+                        <div class="tab" onclick="showTab(event, 'create-400a')">
+                            <span class="status-badge status-400">400</span> Nome Existe
+                        </div>
+                        <div class="tab" onclick="showTab(event, 'create-400b')">
+                            <span class="status-badge status-400">400</span> Campos Obrigatórios
+                        </div>
+                    </div>
+                    <div class="tab-content active" id="create-200">
+                        <div class="code-container">
+                            <div class="code-header">Response Body - Sucesso</div>
+                            <div class="code-block">
+{
+  <span class="json-key">"success"</span>: <span class="json-boolean">true</span>,
+  <span class="json-key">"mensagem"</span>: <span class="json-string">"Senha salva com sucesso"</span>,
+  <span class="json-key">"data"</span>: {
+    <span class="json-key">"nome"</span>: <span class="json-string">"Instagram"</span>,
+    <span class="json-key">"senha"</span>: <span class="json-string">"minha_senha_instagram"</span>,
+    <span class="json-key">"descricao"</span>: <span class="json-string">"Conta pessoal do Instagram"</span>
+  }
+}
+                            </div>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+                        </div>
+                    </div>
+                    <div class="tab-content" id="create-400a">
+                        <div class="code-container">
+                            <div class="code-header">Response Body - Nome Já Existe</div>
+                            <div class="code-block">
+{
+  <span class="json-key">"success"</span>: <span class="json-boolean">false</span>,
+  <span class="json-key">"mensagem"</span>: <span class="json-string">"Já existe um registro com esse nome"</span>,
+  <span class="json-key">"data"</span>: <span class="json-string">null</span>
+}
+                            </div>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+                        </div>
+                    </div>
+                    <div class="tab-content" id="create-400b">
+                        <div class="code-container">
+                            <div class="code-header">Response Body - Campos Obrigatórios</div>
+                            <div class="code-block">
+{
+  <span class="json-key">"success"</span>: <span class="json-boolean">false</span>,
+  <span class="json-key">"mensagem"</span>: <span class="json-string">"o campo nome ou email é obrigatório"</span>
+}
+                            </div>
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Update Password -->
+        <div id="update" class="endpoint-card put">
+            <div class="endpoint-header">
+                <div class="endpoint-title">
+                    <span class="method-badge put">PUT</span>
+                    <span class="endpoint-url">/api/update/{id}</span>
+                </div>
+                <div class="endpoint-description">Atualiza uma senha existente pelo ID</div>
+            </div>
+            <div class="endpoint-body">
+                <div class="section">
+                    <div class="section-title">🔧 Parâmetros da URL</div>
+                    <table class="params-table">
+                        <thead>
+                            <tr>
+                                <th>Parâmetro</th>
+                                <th>Tipo</th>
+                                <th>Obrigatório</th>
+                                <th>Descrição</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>id</code></td>
+                                <td>string</td>
+                                <td><span class="required-badge">Obrigatório</span></td>
+                                <td>ID do documento no Firebase</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">📥 Request Body</div>
+                    <table class="params-table">
+                        <thead>
+                            <tr>
+                                <th>Campo</th>
+                                <th>Tipo</th>
+                                <th>Obrigatório</th>
+                                <th>Descrição</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>nome</code></td>
+                                <td>string</td>
+                                <td><span class="optional-badge">Opcional</span></td>
+                                <td>Novo nome identificador</td>
+                            </tr>
+                            <tr>
+                                <td><code>senha</code></td>
+                                <td>string</td>
+                                <td><span class="optional-badge">Opcional</span></td>
+                                <td>Nova senha</td>
+                            </tr>
+                            <tr>
+                                <td><code>descricao</code></td>
+                                <td>string</td>
+                                <td><span class="optional-badge">Opcional</span></td>
+                                <td>Nova descrição</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="code-container">
+                        <div class="code-header">Request Body Example (application/json)</div>
+                        <div class="code-block">
+{
+  <span class="json-key">"nome"</span>: <span class="json-string">"Instagram Atualizado"</span>,
+  <span class="json-key">"senha"</span>: <span class="json-string">"nova_senha_instagram"</span>,
+  <span class="json-key">"descricao"</span>: <span class="json-string">"Conta atualizada do Instagram"</span>
+}
+                        </div>
+                        <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+                    </div>
+                </div>
+
+                <div class="section">
