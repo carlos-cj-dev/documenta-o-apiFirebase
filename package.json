@@ -1,0 +1,13 @@
+{
+  "name": "password-api-docs",
+  "version": "1.0.0",
+  "description": "Documentação da API de Gerenciamento de Senhas",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve .",
+    "build": "echo 'Build completed'"
+  },
+  "keywords": ["api", "documentation", "password", "manager"],
+  "author": "Carlos Júnior",
+  "license": "MIT"
+}
